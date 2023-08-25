@@ -1,3 +1,3 @@
-def add(x,y){
-  echo "Sum of ${x} and ${y} is ${x+y}"
+def add(int a, int b){
+  return a + b
 }
