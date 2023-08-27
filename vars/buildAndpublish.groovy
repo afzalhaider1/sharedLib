@@ -1,4 +1,4 @@
-def call(Code build and publish artifact) {
+def call(build and publish) {
     pipeline {
         agent any
         parameters {
@@ -9,12 +9,12 @@ def call(Code build and publish artifact) {
         stages {
             stage('Code Checkout') {
                 steps {
-                    git 'config.gitRepoUrl'
+                    git config.gitRepoUrl
                 }
             }
             stage('Build') {
                 steps {
-                    dir('config.dir') {
+                    dir(config.dir) {
                         sh 'mvn clean package'
                     }
                 }
@@ -26,7 +26,7 @@ def call(Code build and publish artifact) {
                             expression { params.SKIP_CODE_STABILITY != true }
                         }
                         steps {
-                            dir('config.dir') {
+                            dir(config.dir) {
                                 sh 'mvn pmd:pmd'
                             }
                         }
@@ -37,7 +37,7 @@ def call(Code build and publish artifact) {
                         }
                         steps {
                             withSonarQubeEnv('sonarQube') {
-                                dir('config.dir') {
+                                dir(config.dir) {
                                     sh "mvn sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey} -Dsonar.projectName='${config.sonarProjectName}'"
                                 }
                             }
@@ -48,7 +48,7 @@ def call(Code build and publish artifact) {
                             expression { params.SKIP_CODE_COVERAGE != true }
                         }
                         steps {
-                            dir('config.dir') {
+                            dir(config.dir) {
                                 sh 'mvn jacoco:report'
                             }
                         }
@@ -67,16 +67,16 @@ def call(Code build and publish artifact) {
                         nexusArtifactUploader(
                             nexusVersion: 'nexus3',
                             protocol: 'http',
-                            nexusUrl: 'config.nexusUrl',
-                            groupId: 'config.groupId',
-                            version: 'config.version',
-                            repository: 'config.repository',
-                            credentialsId: 'config.credentialsId',
+                            nexusUrl: config.nexusUrl,
+                            groupId: config.groupId,
+                            version: config.version,
+                            repository: config.repository,
+                            credentialsId: config.credentialsId,
                             artifacts: [
-                                [artifactId: 'config.artifactId',
+                                [artifactId: config.artifactId,
                                  classifier: '',
-                                 file: "config.artifactFileNameAndPath",
-                                 type: 'config.artifactType']
+                                 file: config.artifactFileNameAndPath,
+                                 type: config.artifactType]
                             ]
                         )
                     }
