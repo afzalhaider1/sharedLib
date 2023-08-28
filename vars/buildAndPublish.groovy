@@ -1,4 +1,4 @@
-def call(buildAndPublish) {
+def call(Map Config) {
     pipeline {
         agent any
         parameters {
