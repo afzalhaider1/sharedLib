@@ -14,7 +14,7 @@ def call(buildAndPublish) {
             }
             stage('Build') {
                 steps {
-                    dir(config.dir) {
+                    dir(config.pathToPomFile) {
                         sh 'mvn clean package'
                     }
                 }
@@ -26,7 +26,7 @@ def call(buildAndPublish) {
                             expression { params.SKIP_CODE_STABILITY != true }
                         }
                         steps {
-                            dir(config.dir) {
+                            dir(config.pathToPomFile) {
                                 sh 'mvn pmd:pmd'
                             }
                         }
@@ -37,7 +37,7 @@ def call(buildAndPublish) {
                         }
                         steps {
                             withSonarQubeEnv('sonarQube') {
-                                dir(config.dir) {
+                                dir(config.pathToPomFile) {
                                     sh "mvn sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey} -Dsonar.projectName='${config.sonarProjectName}'"
                                 }
                             }
@@ -48,7 +48,7 @@ def call(buildAndPublish) {
                             expression { params.SKIP_CODE_COVERAGE != true }
                         }
                         steps {
-                            dir(config.dir) {
+                            dir(config.pathToPomFile) {
                                 sh 'mvn jacoco:report'
                             }
                         }
