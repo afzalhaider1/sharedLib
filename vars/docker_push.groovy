@@ -1,7 +1,7 @@
 def call(String project, String tag){
   echo "Pushing code to Docker Hub"
   withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPass', usernameVariable: 'dockerHubUser')]) {
-  sh "docker login -u ${dockerHubUser} -p ${dockerHubPass} --password-stdin"
+  sh "echo ${dockerHubPass} | docker login -u ${dockerHubUser} --password-stdin"
   sh "docker push ${dockerHubUser}/${project}:${tag}"
   }
 }
